@@ -19,9 +19,25 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="main.php">Pocetna</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="logout.php"><?php echo $_SESSION['fname'] . " " . $_SESSION['lname'];?> - Odjava</a>
+                    </li>
                 <?php endif; ?>
             </ul>
-
         </div>
     </div>
 </nav>
+<?php if (isset($_SESSION['message'])) : ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Uspeh! </strong><?php echo $_SESSION['message']; $_SESSION['message'] = null;?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<?php endif; ?>
+
+<?php if (isset($_SESSION['errors'])) : ?>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Greska! </strong><?php echo $_SESSION['errors']; $_SESSION['errors'] = null;?>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>

@@ -51,6 +51,17 @@
                 </div>
                 <p id = 'validator_text'></p>
             </div>
+            <div class="row my-2">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="role_id">Rola</label>
+                        <select class = "form-control" name = "role_id" id = "role_id">
+                            <option value = "1">Korisnik</option>
+                            <option value = "2">Menadzer</option>   
+                        </select>
+                    </div>
+                </div>
+            </div>
             <p>Ukoliko vec imate nalog, prijavite se <a href = "login.php">ovde</a>.</p>
             <button class="btn btn-primary btn-block w-100 my-3">Prijavi se</button>
         </form>
