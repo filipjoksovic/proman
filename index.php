@@ -60,8 +60,49 @@ if (isset($_POST['action'])) {
             } catch (Exception $e) {
                 $_SESSION['errors'] = $e->getMessage();
                 header("location:" . $_SERVER['HTTP_REFERER']);
-                return;
             }
+            return;
+        } else if ($action == "edit_project") {
+            try {
+                $project_id = $_POST['project_id'];
+                $name = $_POST['name'];
+                $description = $_POST['description'];
+                $benefits = $_POST['benefits'];
+                $location = $_POST['location'];
+                $deadline = $_POST['deadline'];
+                $education = $_POST['education'];
+                $manager_id = $_SESSION['uid'];
+
+                $project = Project::find($project_id);
+                $project->name = $name;
+                $project->description = $description;
+                $project->benefits = $benefits;
+                $project->location = $location;
+                $project->deadline = $deadline;
+                $project->education = $education;
+                $project->manager_id = $manager_id;
+
+                $result = $project->update();
+                echo $result;
+                if ($result === true) {
+                    $_SESSION['message'] = "Uspesno izmenjen projekat";
+                } else {
+                    throw new Exception("Doslo je do greske prilikom izmene projekta. Greska: " . $result);
+                }
+            } catch (Exception $e) {
+                $_SESSION['errors'] = $e->getMessage();
+            }
+            return;
+        } else if ($action == "delete_project") {
+            try {
+                $project_id = $_POST['project_id'];
+                $project = Project::find($project_id);
+                $result = $project->delete();
+                $_SESSION['message'] = "Uspesno uklonjen projekat iz baze podataka.";
+            } catch (Exception $e) {
+                $_SESSION['errors'] = $e->getMessage();
+            }
+            return;
         }
     } catch (Exception $e) {
         $_SESSION['errors'] = $e->getMessage();
@@ -78,6 +119,18 @@ if (isset($_POST['action'])) {
                 throw new Exception("Korisnik sa datim podacima ne postoji");
             } else {
                 echo json_encode($user);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    } else if ($action == "get_project") {
+        $project_id = $_GET['project_id'];
+        try {
+            $project = Project::find($project_id);
+            if ($project == null) {
+                throw new Exception("Projekat sa zadatim parametrima nije pronadjen");
+            } else {
+                echo json_encode($project);
             }
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -156,7 +209,7 @@ if (isset($_POST['action'])) {
         }
     }
     if (strpos($_SERVER['HTTP_REFERER'], "addProject.php")) {
-        try{
+        try {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $benefits = $_POST['benefits'];
@@ -164,21 +217,19 @@ if (isset($_POST['action'])) {
             $deadline = $_POST['deadline'];
             $education = $_POST['education'];
             $manager_id = $_SESSION['uid'];
-            $project = new Project($name,$description,$location,$education,$benefits,$manager_id,$deadline);
+            $project = new Project($name, $description, $location, $education, $benefits, $manager_id, $deadline);
             $result = $project->save();
-            
-            if(!is_numeric($result)){
+
+            if (!is_numeric($result)) {
                 throw new Exception("Doslo je do greske prilikom kreiranja projekta. Greska: " . $result);
-            }
-            else{
+            } else {
                 $_SESSION['message'] = "Uspesno kreiran projekat";
                 header("location:manager.php");
                 return;
             }
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             $_SESSION['errors'] = $e->getMessage();
-            header("location:".$_SERVER['HTTP_REFERER']);
+            header("location:" . $_SERVER['HTTP_REFERER']);
             return;
         }
     }
